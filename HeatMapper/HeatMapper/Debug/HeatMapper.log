@@ -1,0 +1,20 @@
+﻿Build started 06/01/2016 04:38:37.
+     1>Project "C:\Users\Computing\Desktop\HeatMapper\HeatMapper\HeatMapper.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Source.cpp
+         Source.cpp
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(521): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(524): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(527): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(530): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(534): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(539): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+     1>c:\users\computing\desktop\heatmapper\heatmapper\source.cpp(550): warning C4244: 'argument' : conversion from 'float' to 'GLint', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Computing\Desktop\HeatMapper\Debug\HeatMapper.exe" /INCREMENTAL /NOLOGO opengl32.lib glfw3.lib glew32s.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Computing\Desktop\HeatMapper\Debug\HeatMapper.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Computing\Desktop\HeatMapper\Debug\HeatMapper.lib" /MACHINE:X86 Debug\Source.obj
+         HeatMapper.vcxproj -> C:\Users\Computing\Desktop\HeatMapper\Debug\HeatMapper.exe
+     1>Done Building Project "C:\Users\Computing\Desktop\HeatMapper\HeatMapper\HeatMapper.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.88
