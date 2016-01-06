@@ -23,22 +23,14 @@ const GLchar* fragmentShaderSource = "#version 330 core\n"
 
 /* ----- GLOBAL VARIBALES ----- */
 
-// Camera
-float camX = 0.0f;
-float camY = 0.0f;
-GLuint camWidth = WIDTH;
-GLuint camHeight = HEIGHT;
 
-int viewMode = 0;
-
-int p = 2;
 
 /* --- END GLOBAL VARIBALES --- */
 
 void loadPlayerData() //Get position data from file and store in an array
 {
 	string filename;
-	int maxPlayers;
+	
 
 	cout << "Enter file to load: (\"positions.txt\", \"positions2.txt\", \"positions3.txt\")" << endl;
 	cin >> filename;
@@ -95,9 +87,14 @@ void loadPlayerData() //Get position data from file and store in an array
 				in >> yPos;
 				in >> zPos;
 
-				//Normalize coordinates
-				xPos = xPos / sqrt((xPos*xPos) + (yPos*yPos) + (zPos*zPos));
+				//Normalisation of vectors
+				/*xPos = xPos / sqrt((xPos*xPos) + (yPos*yPos) + (zPos*zPos));
 				yPos = yPos / sqrt((xPos*xPos) + (yPos*yPos) + (zPos*zPos));
+				zPos = zPos / sqrt((xPos*xPos) + (yPos*yPos) + (zPos*zPos));*/
+
+				//Normalize coordinates
+				xPos = xPos / 1250 - 0.4f;
+				yPos = yPos / 1250 - 0.6f;
 				zPos = zPos / sqrt((xPos*xPos) + (yPos*yPos) + (zPos*zPos));
 
 				playerPositions[clientNum][lineCounter] = glm::vec3(xPos, yPos, zPos);
@@ -123,6 +120,8 @@ void generateGrid()
 {
 	int squareNum = 0;
 	
+	cout << "Generating visualisation..." << endl;
+
 	for (int row = 0; row < SqPer; row++)
 	{
 		for (int column = 0; column < SqPer; column++)
@@ -136,6 +135,7 @@ void generateGrid()
 			};
 
 			// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+			/* Heatmap */
 			glBindVertexArray(VAO[squareNum]);
 
 			glBindBuffer(GL_ARRAY_BUFFER, VBO[squareNum]);
@@ -143,6 +143,7 @@ void generateGrid()
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[squareNum]);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+			/* Heatmap */
 
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
@@ -183,6 +184,10 @@ void generateGrid()
 			squareNum++;
 		}
 	}
+
+	cout << "Heatmap and trajectories generated." << endl << endl;
+	cout << "To switch mode, press: " << endl << "\"h\" for Heatmap" << endl << "\"t\" for Trajectories" << endl << "\"b\" for Both" << endl;
+	cout << "\"p\" cycles the players when visualising trajectories" << endl;
 }
 
 void runHeatmap()
@@ -225,7 +230,7 @@ void runTrajectory()
 			{
 				if ((entered[0][squareNum] == true))
 				{
-						glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //Player 1 Colour
+						glUniform4f(vertexColorLocation, 0.4f, 0.3f, 0.7f, 1.0f); //Player 1 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -248,7 +253,7 @@ void runTrajectory()
 			{
 				if ((entered[1][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.8f, 0.5f, 0.5f, 1.0f); //Player 2 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -271,7 +276,7 @@ void runTrajectory()
 			{
 				if ((entered[2][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 0.5f, 0.5f, 0.5f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.5f, 0.5f, 0.5f, 1.0f); //Player 3 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -294,7 +299,7 @@ void runTrajectory()
 			{
 				if ((entered[3][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.6f, 0.6f, 1.0f, 1.0f); //Player 4 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -317,7 +322,7 @@ void runTrajectory()
 			{
 				if ((entered[4][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.6f, 1.0f); //Player 5 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -340,7 +345,7 @@ void runTrajectory()
 			{
 				if ((entered[5][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 1.0f, 0.0f, 1.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.6f, 0.7f, 1.0f, 1.0f); //Player 6 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -363,7 +368,7 @@ void runTrajectory()
 			{
 				if ((entered[6][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.4f, 0.6f, 0.6f, 1.0f); //Player 7 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
@@ -386,10 +391,270 @@ void runTrajectory()
 			{
 				if ((entered[7][squareNum] == true))
 				{
-					glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Player 1 Colour
+					glUniform4f(vertexColorLocation, 0.5f, 1.0f, 0.5f, 1.0f); //Player 8 Colour
 				}
 				else
 					glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 0.0f); //Black
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+}
+
+void runBoth()
+{
+	int squareNum = 0;
+
+	if (p == 1)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[0][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.4f, 0.3f, 0.7f, 1.0f); //Player 1 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 2)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[1][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.8f, 0.5f, 0.5f, 1.0f); //Player 2 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 3)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[2][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.5f, 0.5f, 0.5f, 1.0f); //Player 3 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 4)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[3][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.6f, 0.6f, 1.0f, 1.0f); //Player 4 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 5)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[4][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.6f, 1.0f); //Player 5 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 6)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[5][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.6f, 0.7f, 1.0f, 1.0f); //Player 6 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 7)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[6][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.4f, 0.6f, 0.6f, 1.0f); //Player 7 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
+
+				glBindVertexArray(VAO[squareNum]);
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+
+				squareNum++;
+			}
+		}
+	}
+
+	if (p == 8)
+	{
+		for (int row = 0; row < SqPer; row++)
+		{
+			for (int column = 0; column < SqPer; column++)
+			{
+				if ((entered[7][squareNum] == true))
+				{
+					glUniform4f(vertexColorLocation, 0.5f, 1.0f, 0.5f, 1.0f); //Player 8 Colour
+				}
+				else
+				{
+					if ((hitCount[row][column]) == 0) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 0.0f, 1.0f); //Black
+					else if (hitCount[row][column] == 1) glUniform4f(vertexColorLocation, 0.0f, 0.0f, 1.0f, 1.0f); //Blue
+					else if (hitCount[row][column] > 1 && hitCount[row][column] < 5) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 1.0f, 1.0f); //Cyan
+					else if (hitCount[row][column] > 4 && hitCount[row][column] < 10) glUniform4f(vertexColorLocation, 0.0f, 1.0f, 0.0f, 1.0f); //Green
+					else if (hitCount[row][column] > 9 && hitCount[row][column] < 16) glUniform4f(vertexColorLocation, 1.0f, 1.0f, 0.0f, 1.0f); //Yellow
+					else if (hitCount[row][column] > 15 && hitCount[row][column] < 23) glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.0f, 1.0f); //Orange
+					else if (hitCount[row][column] > 22 && hitCount[row][column] < 31) glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f); //Red
+					else glUniform4f(vertexColorLocation, 1.0f, 1.0f, 1.0f, 1.0f); //White
+				}
 
 				glBindVertexArray(VAO[squareNum]);
 
@@ -495,8 +760,10 @@ int main()
 
 		if (viewMode == 0)
 			runHeatmap();
-		else
+		else if (viewMode == 1)
 			runTrajectory();
+		else
+			runBoth();
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -556,17 +823,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	//Zoom
 	if (key == GLFW_KEY_H)
 	{
-		viewMode = 0;
+		viewMode = 0; //Heatmap
 	}
 
 	if (key == GLFW_KEY_T)
 	{
-		viewMode = 1;
+		viewMode = 1; //Trajectories
 	}
 
-	if (key == GLFW_KEY_P && action == GLFW_PRESS)
+	if (key == GLFW_KEY_B)
 	{
-		if (p < 8)
+		viewMode = 2; //Both
+	}
+
+	if (key == GLFW_KEY_P && action == GLFW_PRESS && (viewMode == 1 || viewMode == 2))
+	{
+		if (p < maxPlayers)
 			p++;
 		else
 			p = 1;

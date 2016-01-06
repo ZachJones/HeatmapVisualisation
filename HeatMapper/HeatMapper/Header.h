@@ -23,10 +23,9 @@ const int playerNum = 8; //Max possible players
 const int posNum = 50000; //22150
 static glm::vec3 playerPositions[playerNum][posNum];
 
-const int SqPer = 200;
+const int SqPer = 200; //200
 const int MaxBoxes = SqPer * SqPer;
-bool colours[MaxBoxes];
-float xCoord, yCoord, zCoord;
+
 GLuint VBO[MaxBoxes], VAO[MaxBoxes], EBO[MaxBoxes];
 const GLint indices[] =
 {
@@ -36,3 +35,14 @@ const GLint indices[] =
 
 int hitCount[SqPer][SqPer];
 bool entered[playerNum][SqPer*SqPer];
+
+// Camera
+float camX = 0.0f;
+float camY = 0.0f;
+GLuint camWidth = WIDTH;
+GLuint camHeight = HEIGHT;
+
+int viewMode = 0;
+int maxPlayers;
+
+int p = 1;
